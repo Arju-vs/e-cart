@@ -2,13 +2,26 @@ import React from 'react'
 import Header from '../Components/Header'
 import { useDispatch, useSelector } from 'react-redux'
 import { removeItem } from '../redux/slices/wishlistSlice'
+import { addToCart } from '../redux/slices/cartSlice'
 
 const Wishlist = () => {
   const dispatch = useDispatch()
+  const userCart = useSelector(state=>state.cartReducer)
   const userWishlist = useSelector(state=>state.wishlistReducer)
   console.log(userWishlist);
   
+  const handleCart = (product)=>{
+    dispatch(removeItem(product.id))
+    dispatch(addToCart(product))
+    const existingProduct = userCart?.find(item=>item?.id==product.id)
+    if(existingProduct){
+      alert("Product quantity is incrementing!")
+    }else{
+      alert("Product added successfully!")
+    }
+  }
 
+  
 
   return (
     <>
@@ -27,7 +40,7 @@ const Wishlist = () => {
               <h3 className="text-xl font-bold">{product?.title}</h3>
               <div className="flex justify-evenly mt-3">
                 <button onClick={()=>dispatch(removeItem(product?.id))} className="text-xl"><i className="fa-solid fa-heart-circle-xmark text-red-500"></i></button>
-                <button className="text-xl"><i className="fa-solid fa-cart-plus text-green-700"></i></button>
+                <button onClick={()=>dispatch(handleCart(product))} className="text-xl"><i className="fa-solid fa-cart-plus text-green-700"></i></button>
                 </div>            
             </div>
           </div>
@@ -37,7 +50,7 @@ const Wishlist = () => {
         </>
         :
         <div className="flex flex-col justify-center items-center">
-          <img src="https://i.pinimg.com/736x/2e/ac/fa/2eacfa305d7715bdcd86bb4956209038.jpg" alt="" />
+          <img src="https://i.pinimg.com/564x/f6/e4/64/f6e464230662e7fa4c6a4afb92631aed.jpg" alt="" />
           <h1 className="text-3xl text-red-600">Your Wishlist is empty!!</h1>
         </div>
         }
